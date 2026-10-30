@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171b2b">
+  <meta name="description" content="BI Booster — the internal social growth operating system for Bouquet Innovation.">
+  <title>BI Booster — Social growth, in motion</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="demo.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main id="auth-screen" class="auth-screen">
+    <section class="auth-card" aria-labelledby="login-title">
+      <a class="brand auth-brand" href="#login" aria-label="BI Booster sign in"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span class="brand-name">BI<span>booster</span></span></a>
+      <div id="login-entry">
+        <span class="auth-kicker">BOUQUET INNOVATION · TEAM ACCESS</span>
+        <h1 id="login-title">Good to have<br><span>you back.</span></h1>
+        <p class="auth-intro">Sign in to your team's social growth workspace. We’ll email you a secure, one-time approval link.</p>
+        <form id="login-form" novalidate>
+          <label for="login-email">Work email</label>
+          <input id="login-email" name="email" type="email" autocomplete="email" placeholder="you@bouquet-innovation.net" required>
+          <p class="auth-hint">Only <b>@bouquet-innovation.net</b> addresses can sign in.</p>
+          <button class="button button-primary auth-submit" type="submit" id="login-submit">Email me an approval link <span>→</span></button>
+          <p class="auth-error" id="login-error" role="alert" hidden></p>
+        </form>
+        <p class="auth-admin">Workspace admin <b>support@bouquet-innovation.net</b></p>
+      </div>
+      <div class="login-sent" id="login-sent" hidden role="status" aria-live="polite">
+        <span class="sent-mark" aria-hidden="true">↗</span><span class="auth-kicker">CHECK YOUR INBOX</span>
+        <h2>Your link is<br><span>on its way.</span></h2>
+        <p>We sent a sign-in approval link to <b id="sent-email"></b>. It expires in 15 minutes.</p>
+        <button class="auth-text-button" id="change-email" type="button">Use a different email</button>
+      </div>
+      <div class="login-verifying" id="login-verifying" hidden role="status" aria-live="polite">
+        <span class="auth-spinner" aria-hidden="true"></span><h2>Opening your<br>workspace…</h2><p>Verifying your one-time sign-in link.</p>
+      </div>
+      <div class="auth-footer"><span>✳</span> An internal workspace by Bouquet Innovation SA</div>
+    </section>
+    <aside class="auth-aside" aria-hidden="true"><div class="aside-orbit orbit-one"></div><div class="aside-orbit orbit-two"></div><div class="aside-grid"></div><span class="aside-spark">✳</span><div class="aside-copy"><span>THE WORK BEHIND THE GROWTH</span><h2>Make every<br>move <i>count.</i></h2><p>One workspace for ideas, publishing, and the signals that help every client grow.</p></div><div class="aside-platforms"><span>tiktok</span><span>instagram</span><span>linkedin</span><span>youtube</span></div><div class="aside-wordmark">BI <span>BOOSTER</span></div></aside>
+  </main>
+  <div class="shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#overview" aria-label="BI Booster home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="brand-name">BI<span>booster</span></span>
+      </a>
+      <div class="workspace-switch">
+        <span class="workspace-avatar">BI</span>
+        <span class="workspace-copy"><b>Bouquet Innovation</b><small>Agency workspace</small></span>
+        <span class="chevron" aria-hidden="true">⌄</span>
+      </div>
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="nav-list">
+        <a class="nav-item active" href="#overview" data-view="overview"><span class="nav-icon">◫</span>Overview</a>
+        <a class="nav-item" href="#planner" data-view="planner"><span class="nav-icon">▦</span>Planner <span class="nav-count">4</span></a>
+        <a class="nav-item" href="#inbox" data-view="inbox"><span class="nav-icon">⌑</span>Engagement inbox <span class="nav-dot"></span></a>
+        <a class="nav-item" href="#analytics" data-view="analytics"><span class="nav-icon">⌁</span>Analytics</a>
+        <a class="nav-item" href="#studio" data-view="studio"><span class="nav-icon">✳</span>AI studio <span class="new-tag">NEW</span></a>
+      </nav>
+      <div class="client-heading"><p class="nav-label">CLIENT PORTFOLIO</p><button class="icon-button add-client" aria-label="Add client">+</button></div>
+      <div class="client-list">
+        <div id="client-list" class="client-list-content"><p class="client-list-empty">Loading clients…</p></div>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="usage-box"><div class="usage-top"><span>Publishing capacity</span><b>68%</b></div><div class="usage-track"><span></span></div><small>34 of 50 posts this month</small></div>
+        <a class="nav-item" href="#settings" data-view="settings"><span class="nav-icon">⚙</span>Settings</a>
+        <button class="profile-button" id="profile-button"><span class="profile-avatar" id="profile-avatar">BI</span><span class="profile-copy"><b id="profile-email">Team member</b><small id="profile-role">Bouquet Innovation</small></span><span class="chevron">⌄</span></button>
+      </div>
+    </aside>
+
+    <main id="main" class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><b id="crumb-current">Overview</b></div>
+        <div class="top-actions"><span class="sample-status" id="connection-status"><i></i> Neon connected</span><button class="top-icon notification" aria-label="Notifications">♧<i></i></button><button class="top-icon" id="logout-button" aria-label="Sign out">↗</button></div>
+      </header>
+
+      <div class="page-wrap" id="overview-view">
+        <div class="demo-notice" id="workspace-notice" role="status" aria-live="polite"><span>WORKSPACE DATA</span><p>Loading clients, planner items, and performance from the workspace database…</p></div>
+        <section class="welcome-row">
+          <div><div class="date-stamp" id="today-label"></div><h1>Growth looks good<br><span>from here.</span><span class="title-spark">✳</span></h1><p class="welcome-sub" id="welcome-sub">Your portfolio, ready for its next move.</p></div>
+          <div class="welcome-actions"><button class="button button-quiet" id="report-btn"><span>↗</span> Export report</button><button class="button button-primary" id="compose-btn"><span>＋</span> Create a post</button></div>
+        </section>
+
+        <section class="metrics-grid" aria-label="Portfolio metrics">
+          <article class="metric-card"><div class="metric-heading"><span>Audience reached</span><span class="metric-glyph glyph-reach">↗</span></div><div class="metric-value" id="metric-reach">—</div><div class="metric-foot" id="metric-reach-note">Last 30 days</div></article>
+          <article class="metric-card"><div class="metric-heading"><span>Engagement rate</span><span class="metric-glyph glyph-engage">♡</span></div><div class="metric-value" id="metric-engagement">—</div><div class="metric-foot" id="metric-engagement-note">Across connected channels</div></article>
+          <article class="metric-card"><div class="metric-heading"><span>Followers gained</span><span class="metric-glyph glyph-follow">◎</span></div><div class="metric-value" id="metric-followers">—</div><div class="metric-foot" id="metric-followers-note">Last 30 days</div></article>
+          <article class="metric-card highlight-metric"><div class="metric-heading"><span>Posts in planner</span><span class="metric-glyph glyph-post">↗</span></div><div class="metric-value" id="metric-posts">—</div><div class="metric-foot" id="metric-posts-note">Drafts and scheduled posts</div></article>
+        </section>
+
+        <div class="content-grid">
+          <section class="panel performance-panel">
+            <div class="panel-heading"><div><h2>Portfolio performance</h2><p>Your channels are picking up pace</p></div><div class="panel-tools"><label class="sr-only" for="range-select">Performance date range</label><select id="range-select" class="select-control"><option>Last 30 days</option><option>Last 7 days</option><option>This quarter</option></select><button class="more-button" aria-label="More performance options">···</button></div></div>
+            <div class="chart-legend"><span><i class="legend-dot reach-dot"></i>Reach</span><span><i class="legend-dot engagement-dot"></i>Engagement</span><div class="chart-toggle" role="group" aria-label="Chart interval"><button class="toggle-active">Weekly</button><button>Monthly</button></div></div>
+            <div class="chart-wrap"><div class="y-labels" id="chart-y-labels"><span>—</span><span>—</span><span>—</span><span>0</span></div><div class="chart-area"><div class="grid-lines"><i></i><i></i><i></i><i></i></div><svg class="performance-chart" viewBox="0 0 680 230" preserveAspectRatio="none" role="img" aria-label="Reach and engagement data for the last 30 days"><defs><linearGradient id="reachFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4c62ee" stop-opacity=".18"/><stop offset="1" stop-color="#4c62ee" stop-opacity="0"/></linearGradient></defs><path class="chart-fill" id="chart-fill" d=""/><path class="reach-line" id="reach-line" d=""/><path class="engagement-line" id="engagement-line" d=""/></svg><p class="chart-empty" id="chart-empty">Connect a social account to see performance.</p><div class="x-labels" id="chart-x-labels"><span>30 days ago</span><span>Today</span></div></div></div>
+            <div class="channel-breakdown"><div class="breakdown-heading"><h3>Top channels this month</h3><button class="text-link" data-view="analytics">View analytics <span>→</span></button></div><div id="channel-rows"><p class="empty-inline">Channel performance appears after accounts are connected.</p></div></div>
+          </section>
+
+          <section class="panel schedule-panel">
+            <div class="panel-heading"><div><h2>Coming up</h2><p>Next in your publishing queue</p></div><button class="more-button" aria-label="More queue options">···</button></div>
+            <div class="queue-date"><span class="date-square"><b id="queue-date-day">—</b><small id="queue-date-month">TODAY</small></span><span class="date-copy"><b>Publishing planner</b><small id="queue-post-count">Posts are stored in Neon.</small></span><button class="arrow-button" aria-label="Open the publishing planner" data-view="planner">→</button></div>
+            <div class="post-list" id="post-list"><p class="empty-inline">Your upcoming posts will appear here.</p></div>
+            <button class="queue-link" data-view="planner">Open content planner <span>→</span></button>
+          </section>
+        </div>
+
+        <div class="lower-grid">
+          <section class="panel signals-panel"><div class="panel-heading"><div><h2>Worth a closer look</h2><p>Signals from across your portfolio</p></div><span class="spark-badge">✳ AI insights</span></div><div id="insight-list"><p class="empty-inline">Insights will appear when connected channel analytics are available.</p></div><button class="all-insights" data-view="analytics">See analytics <span>→</span></button></section>
+          <section class="panel tasks-panel"><div class="panel-heading"><div><h2>Team focus</h2><p>Keep momentum moving</p></div><button class="more-button" aria-label="More team focus options">···</button></div><div id="task-list"><p class="empty-inline">No open tasks yet.</p></div><button class="task-add" id="task-add"><span>＋</span> Add a task</button></section>
+        </div>
+        <footer class="page-footer"><span>Made for the momentum makers <span class="footer-spark">✳</span></span><span>BI Booster <i></i> Bouquet Innovation</span></footer>
+      </div>
+
+      <section class="alternate-view" id="alternate-view" hidden><div class="alt-eyebrow">BI BOOSTER <span>✳</span> WORKSPACE</div><h1 id="alt-title">Content planner</h1><p id="alt-copy">Plan campaigns across every client and channel.</p><div class="alt-action-row"><button class="button button-primary" id="alt-compose">＋ Create a post</button><button class="button button-quiet" id="back-overview">← Back to overview</button></div><div class="alt-placeholder" id="alt-placeholder"></div></section>
+    </main>
+  </div>
+
+  <dialog class="compose-dialog" id="compose-dialog" aria-labelledby="compose-title"><form id="compose-form"><div class="dialog-top"><div><span class="dialog-kicker">NEW CONTENT</span><h2 id="compose-title">Make something that moves.</h2></div><button type="button" class="dialog-close" id="compose-close" aria-label="Close create post dialog">×</button></div><label for="client-select">Client account</label><select id="client-select" required><option value="">Select a client</option></select><label for="post-copy">What's the story?</label><textarea id="post-copy" rows="5" placeholder="Write a caption, or start with an idea…"></textarea><div class="assist-row"><button type="button" id="assist-btn">✳ Help me shape it</button><span>AI suggestions are a starting point. Your voice leads.</span></div><label>Save to planner</label><div class="platform-picks"><label><input type="checkbox" value="instagram"><span class="platform-small platform-instagram">◎</span> Instagram</label><label><input type="checkbox" value="facebook"><span class="platform-small platform-facebook">f</span> Facebook</label><label><input type="checkbox" value="tiktok"><span class="platform-small platform-tiktok">♪</span> TikTok</label><label><input type="checkbox" value="linkedin"><span class="platform-small platform-linkedin">in</span> LinkedIn</label></div><p class="form-note">This saves a draft to the planner. Social publishing will be enabled after channels are connected.</p><div class="dialog-actions"><button type="button" class="button button-quiet" id="save-draft-btn">Save draft</button><button type="submit" class="button button-primary" id="schedule-btn">Save to planner <span>→</span></button></div><p class="auth-error" id="compose-error" role="alert" hidden></p></form></dialog>
+  <dialog class="simple-dialog" id="client-dialog" aria-labelledby="client-dialog-title"><form id="client-form"><div class="dialog-top"><div><span class="dialog-kicker">ADMIN · CLIENT PORTFOLIO</span><h2 id="client-dialog-title">Add a client.</h2></div><button type="button" class="dialog-close" data-close-dialog="client-dialog" aria-label="Close add client dialog">×</button></div><label for="client-name">Client name</label><input id="client-name" required maxlength="100" placeholder="Company name"><label for="client-industry">Industry</label><input id="client-industry" maxlength="80" placeholder="Optional"><div class="dialog-actions"><button type="button" class="button button-quiet" data-close-dialog="client-dialog">Cancel</button><button class="button button-primary" type="submit">Add client <span>→</span></button></div><p class="auth-error" id="client-error" role="alert" hidden></p></form></dialog>
+  <dialog class="simple-dialog" id="task-dialog" aria-labelledby="task-dialog-title"><form id="task-form"><div class="dialog-top"><div><span class="dialog-kicker">TEAM FOCUS</span><h2 id="task-dialog-title">Add a task.</h2></div><button type="button" class="dialog-close" data-close-dialog="task-dialog" aria-label="Close add task dialog">×</button></div><label for="task-title">What needs doing?</label><input id="task-title" required maxlength="240" placeholder="A clear next step"><label for="task-due">Due date</label><input id="task-due" type="date"><div class="dialog-actions"><button type="button" class="button button-quiet" data-close-dialog="task-dialog">Cancel</button><button class="button button-primary" type="submit">Add task <span>→</span></button></div><p class="auth-error" id="task-error" role="alert" hidden></p></form></dialog>
+  <div class="toast" role="status" aria-live="polite" id="toast"></div>
+</body>
+</html>

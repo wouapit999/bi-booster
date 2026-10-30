@@ -1,0 +1,4 @@
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/DBNAME?sslmode=require
+RESEND_API_KEY=re_replace_me
+EMAIL_FROM="BI Booster <support@bouquet-innovation.net>"
+APP_BASE_URL=http://localhost:8787
