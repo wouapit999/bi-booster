@@ -7,6 +7,14 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
-  }
+    "run_worker_first": ["/api/*", "/media/*"]
+  },
+  // Migrations in migrations/*.sql are bundled as text and applied by src/schema.js.
+  "rules": [{ "type": "Text", "globs": ["**/*.sql"], "fallthrough": true }],
+  // The publisher checks for due posts every minute; the SCHEDULE KV key keeps it from waking Neon needlessly.
+  "triggers": { "crons": ["* * * * *"] },
+  "kv_namespaces": [{ "binding": "SCHEDULE", "id": "b32090545c80443998f24e0789947f63" }]
+  // To enable media uploads, turn on R2 in the Cloudflare dashboard, run
+  // `npx wrangler r2 bucket create bi-booster-media`, then add:
+  // "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "bi-booster-media" }]
 }

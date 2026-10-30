@@ -47,7 +47,7 @@ function showWorkspace(user){
   state.user=user;document.body.classList.add('authenticated');$('#auth-screen').hidden=true;
   $('#profile-email').textContent=user.email;
   $('#profile-avatar').textContent=user.email.split('@')[0].slice(0,2).toUpperCase();
-  $('#profile-role').textContent=user.role==='admin'?'Workspace admin':'Bouquet Innovation';
+  $('#profile-role').textContent={admin:'Workspace admin',manager:'Manager',editor:'Editor',viewer:'Viewer'}[user.role]||'Bouquet Innovation';
   $('.add-client').hidden=user.role!=='admin';
 }
 function element(tag,className,text){
@@ -103,7 +103,7 @@ function renderClients(){
     :'Add your first client to start building the portfolio.';
 }
 function selectClient(id){
-  state.selectedClient=id;renderClients();renderPosts();renderTasks();
+  state.selectedClient=id;renderClients();renderPosts();renderTasks();window.onClientSelected?.();
   const client=state.clients.find((item)=>item.id===id);
   $('#welcome-sub').textContent=id==='all'
     ?state.clients.length+' client accounts in your portfolio. Here is what to focus on today.'
@@ -128,7 +128,11 @@ function renderPosts(){
     (post.platforms||[]).slice(0,3).forEach((platform)=>meta.append(iconFor(platform)));
     meta.append(element('span','',post.client_name));
     meta.append(element('span','post-status status-'+post.status,post.status[0].toUpperCase()+post.status.slice(1)));
-    body.append(meta,element('p','',post.content||'No caption added yet.'));article.append(rail,body);list.append(article);
+    body.append(meta,element('p','',post.content||'No caption added yet.'));article.append(rail,body);
+    article.tabIndex=0;article.setAttribute('role','button');article.style.cursor='pointer';
+    article.addEventListener('click',()=>window.openPost?.(post.id));
+    article.addEventListener('keydown',(event)=>{if(event.key==='Enter')window.openPost?.(post.id);});
+    list.append(article);
   });
 }
 function renderTasks(){
@@ -187,6 +191,7 @@ function renderDashboard(data){
   $('#queue-date-month').textContent=new Intl.DateTimeFormat('en',{month:'short'}).format(today).toUpperCase();
   $('#queue-post-count').textContent=state.posts.length+' planner '+(state.posts.length===1?'item':'items')+' · '+state.tasks.length+' open tasks';
   $('#profile-email').textContent=state.user.email;
+  window.onDashboard?.(data);
 }
 async function loadDashboard(){
   try{renderDashboard(await api('/dashboard'));}
@@ -197,19 +202,6 @@ function closeDialog(selector){const dialog=$(selector);if(dialog?.open)dialog.c
 function setBusy(button,busy,label){
   if(busy){button.dataset.originalText=button.textContent;button.disabled=true;button.textContent=label;}
   else{button.disabled=false;button.textContent=button.dataset.originalText||button.textContent;delete button.dataset.originalText;}
-}
-async function savePost(event){
-  event?.preventDefault();clearError('#compose-error');
-  const clientId=$('#client-select').value;
-  const content=$('#post-copy').value.trim();
-  const selected=$$('.platform-picks input:checked').map((input)=>input.value);
-  if(!clientId){formError('#compose-error','Add or select a client first.');return;}
-  const button=$('#schedule-btn');setBusy(button,true,'Saving…');
-  try{
-    await api('/posts',{method:'POST',body:JSON.stringify({clientId,content,platforms:selected})});
-    closeDialog('#compose-dialog');$('#compose-form').reset();await loadDashboard();toast('Draft saved to the planner.');
-  }catch(error){formError('#compose-error',error.message);}
-  finally{setBusy(button,false);}
 }
 async function submitLogin(event){
   event.preventDefault();clearError('#login-error');
@@ -230,7 +222,7 @@ async function completeMagicLink(token){
     const response=await fetch(API+'/auth/verify',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',cache:'no-store',body:JSON.stringify({token})});
     const result=await response.json().catch(()=>({}));history.replaceState(null,'',location.pathname+location.search);
     if(!response.ok)throw new Error(result.error||'This sign-in link is invalid or has expired.');
-    showWorkspace(result.user);await loadDashboard();
+    showWorkspace(result.user);await loadDashboard();await window.onWorkspaceReady?.();
   }catch(error){$('#login-verifying').hidden=true;$('#login-entry').hidden=false;formError('#login-error',error.message||'This sign-in link is invalid or has expired.');}
 }
 async function signOut(){
@@ -243,10 +235,8 @@ async function initialize(){
   $('#login-form').addEventListener('submit',submitLogin);
   $('#change-email').addEventListener('click',()=>{$('#login-sent').hidden=true;$('#login-entry').hidden=false;$('#login-email').focus();});
   $('#logout-button').addEventListener('click',signOut);
-  $('#compose-btn').addEventListener('click',()=>openDialog('#compose-dialog'));
-  $('#alt-compose').addEventListener('click',()=>openDialog('#compose-dialog'));
-  $('#compose-close').addEventListener('click',()=>closeDialog('#compose-dialog'));
-  $('#compose-form').addEventListener('submit',savePost);$('#save-draft-btn').addEventListener('click',savePost);
+  $('#compose-btn').addEventListener('click',()=>window.openCompose?.());
+  $('#alt-compose').addEventListener('click',()=>window.openCompose?.());
   $('#assist-btn').addEventListener('click',()=>{
     const field=$('#post-copy');const intro=field.value.trim();
     field.value=intro?intro+'\n\nStarter prompt: show a small detail your audience would notice first, then tell them why it matters.':'Starter prompt: what small moment does your product make better?';
@@ -262,7 +252,7 @@ async function initialize(){
   $('#task-add').addEventListener('click',()=>openDialog('#task-dialog'));
   $('#task-form').addEventListener('submit',async(event)=>{
     event.preventDefault();clearError('#task-error');const button=$('#task-form button[type=submit]');setBusy(button,true,'Adding…');
-    try{await api('/tasks',{method:'POST',body:JSON.stringify({title:$('#task-title').value,dueOn:$('#task-due').value||null})});closeDialog('#task-dialog');$('#task-form').reset();await loadDashboard();toast('Task added to team focus.');}
+    try{await api('/tasks',{method:'POST',body:JSON.stringify({title:$('#task-title').value,dueOn:$('#task-due').value||null,assignedTo:$('#task-assignee').value||null,clientId:$('#task-client').value||null})});closeDialog('#task-dialog');$('#task-form').reset();await loadDashboard();toast('Task added to team focus.');}
     catch(error){formError('#task-error',error.message);}
     finally{setBusy(button,false);}
   });
@@ -273,8 +263,8 @@ async function initialize(){
     $$('.nav-item[data-view]').forEach((nav)=>nav.classList.toggle('active',nav.dataset.view===view));
     $('#crumb-current').textContent=views[view][0];const home=view==='overview';
     $('#overview-view').hidden=!home;$('#alternate-view').hidden=home;
-    if(!home){$('#alt-title').textContent=views[view][0];$('#alt-copy').textContent=views[view][1];$('#alt-placeholder').replaceChildren();}
-    location.hash=view;
+    if(!home){$('#alt-title').textContent=views[view][0];$('#alt-copy').textContent=views[view][1];$('#alt-placeholder').replaceChildren();window.renderManageView?.(view);}
+    history.replaceState(null,'',location.pathname+location.search+'#'+view);
   }));
   $('#back-overview').addEventListener('click',()=>{location.hash='overview';$('[data-view=\"overview\"]').click();});
   $$('.chart-toggle button').forEach((button)=>button.addEventListener('click',()=>{
@@ -286,7 +276,7 @@ async function initialize(){
   try{
     const response=await fetch(API+'/auth/me',{credentials:'same-origin',cache:'no-store'});
     if(!response.ok){showLogin();return;}
-    const data=await response.json();showWorkspace(data.user);await loadDashboard();
+    const data=await response.json();showWorkspace(data.user);await loadDashboard();await window.onWorkspaceReady?.();
   }catch{showLogin();}
 }
 initialize();
