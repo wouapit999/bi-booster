@@ -3,6 +3,7 @@ body.authenticated #auth-screen{display:none}
 .auth-screen{min-height:100vh;display:grid;grid-template-columns:minmax(390px,.92fr) minmax(420px,1.08fr);background:white}
 .auth-card{min-height:100vh;padding:clamp(28px,6vw,82px);display:flex;flex-direction:column;justify-content:center;position:relative}
 .auth-brand{padding:0;margin:0 0 clamp(54px,9vh,92px);width:max-content;color:var(--ink)}
+.auth-brand .brand-name{font-size:18px}
 .auth-brand .brand-name span{color:var(--muted)}
 .auth-kicker{font-size:9px;font-weight:800;letter-spacing:1.25px;color:#737b8d}
 .auth-card h1,.auth-card h2{font-size:clamp(36px,4.3vw,54px);line-height:1.04;letter-spacing:-1.6px;margin:13px 0 12px;font-weight:700;text-wrap:balance}
